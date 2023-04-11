@@ -1,15 +1,14 @@
 import { EventEmitter } from 'events';
 import { FSWatcher } from 'fs';
 
+type Options = {
+  timeout?: number; //* Debounce timeout in milliseconds
+  deep?: boolean; //* If true, will watch files recursively
+  ignore?: RegExp[]; //* Ignore specific files (should be dir)
+};
+
 export class DirectoryWatcher extends EventEmitter {
-  watchers: Map<string, FSWatcher>;
-  timeout: number;
-  timer: NodeJS.Timer;
-  queue: Map<string, string>;
-  constructor(options?: { timeout?: number });
-  post(event: string, filename: string): void;
-  sendQueue(): void;
-  watchDirectory(path: string): void;
-  watchFile(path: string): void;
+  constructor(options?: Options);
+  watch(path: string): void;
   unwatch(path: string): void;
 }

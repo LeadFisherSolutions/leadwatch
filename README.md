@@ -8,7 +8,11 @@
 
 ```js
 const leadwatch = require('leadwatch');
-const watcher = new leadwatch.DirectoryWatcher({ timeout: 200 });
+const watcher = new leadwatch.DirectoryWatcher({
+  timeout: 200,
+  ignore: [new RegExp(/[\D\d]+\.ignore\D*/)],
+  deep: false,
+});
 watcher.watch('/home/sashapop10/Downloads');
 watcher.watch('/home/sashapop10/Documents');
 watcher.on('change', fileName => console.log({ changed: fileName }));
