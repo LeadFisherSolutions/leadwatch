@@ -1,8 +1,8 @@
 'use strict';
 
-const fs = require('fs');
-const path = require('path');
-const { EventEmitter } = require('events');
+const fs = require('node:fs');
+const path = require('node:path');
+const { EventEmitter } = require('node:events');
 
 const WATCH_TIMEOUT = 10000;
 
@@ -50,7 +50,6 @@ class DirectoryWatcher extends EventEmitter {
       const target = targetPath.endsWith(path.sep + filename);
       const filePath = target ? targetPath : path.join(targetPath, filename);
       if (!this.#access(filePath)) return;
-      console.log(filePath);
 
       fs.stat(filePath, (err, stats) => {
         if (err) {
