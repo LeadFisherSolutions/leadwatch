@@ -28,13 +28,13 @@ class DirectoryWatcher extends EventEmitter {
     if (this.#timer) clearTimeout(this.#timer);
     this.#timer = setTimeout(() => this.#sendQueue(), this.#timeout);
     this.#queue.set(filePath, event);
-  }
+  };
 
-  #access = (file) => {
+  #access = file => {
     const ignore = this.#options.ignore ?? [];
     const isIgnore = ignore.reduce((acc, pattern) => (acc |= new RegExp(pattern).test(file)), false);
     return !isIgnore;
-  }
+  };
 
   #sendQueue = () => {
     if (!this.#timer) return;
@@ -42,9 +42,9 @@ class DirectoryWatcher extends EventEmitter {
     this.#timer = null;
     for (const [filePath, event] of this.#queue) this.emit(event, filePath);
     this.#queue.clear();
-  }
+  };
 
-  #setWatcher = (targetPath) => {
+  #setWatcher = targetPath => {
     if (this.#watchers.has(targetPath)) return;
     const watcher = fs.watch(targetPath, (event, filename) => {
       const target = targetPath.endsWith(path.sep + filename);
@@ -64,9 +64,9 @@ class DirectoryWatcher extends EventEmitter {
     });
 
     this.#watchers.set(targetPath, watcher);
-  }
+  };
 
-  watch = (targetPath) => {
+  watch = targetPath => {
     const watcher = this.#watchers.get(targetPath);
     if (watcher) return;
 
@@ -85,14 +85,14 @@ class DirectoryWatcher extends EventEmitter {
 
       this.#setWatcher(targetPath);
     });
-  }
+  };
 
-  unwatch = (targetPath) => {
+  unwatch = targetPath => {
     const watcher = this.#watchers.get(targetPath);
     if (!watcher) return;
     watcher.close();
     this.#watchers.delete(targetPath);
-  }
+  };
 }
 
-module.exports = { DirectoryWatcher };
+module.exports = DirectoryWatcher;
