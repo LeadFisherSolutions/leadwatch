@@ -7,8 +7,8 @@
 ## Usage
 
 ```js
-const leadwatch = require('leadwatch');
-const watcher = new leadwatch.DirectoryWatcher({
+const DirectoryWatcher = require('leadwatch');
+const watcher = new DirectoryWatcher({
   timeout: 200,
   ignore: [new RegExp(/[\D\d]+\.ignore\D*/)],
   deep: false,
