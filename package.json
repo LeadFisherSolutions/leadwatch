@@ -3,7 +3,7 @@
   "description": "[Node js] File system watcher",
   "homepage": "https://leadfisher.ru",
   "version": "1.0.0",
-  "packageManager": "pnpm@7.26.0",
+  "packageManager": "npm@9.6.4",
   "private": true,
   "type": "commonjs",
   "main": "index.js",
