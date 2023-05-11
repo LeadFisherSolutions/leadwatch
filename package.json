@@ -6,7 +6,6 @@
   "homepage": "https://leadfisher.ru",
   "version": "1.0.0",
   "packageManager": "npm@9.6.4",
-  "private": true,
   "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",
