@@ -1,6 +1,8 @@
 {
   "name": "leadwatch",
   "description": "[Node js] File system watcher",
+  "author": "Alexander Ivanov <sashapop101@gmail.com>",
+  "license": "MIT",
   "homepage": "https://leadfisher.ru",
   "version": "1.0.0",
   "packageManager": "npm@9.6.4",
