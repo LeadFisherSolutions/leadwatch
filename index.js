@@ -6,7 +6,7 @@ const { EventEmitter } = require('node:events');
 
 const WATCH_TIMEOUT = 10000;
 
-class DirectoryWatcher extends EventEmitter {
+class Watcher extends EventEmitter {
   #watchers;
   #timeout;
   #timer;
@@ -94,4 +94,4 @@ class DirectoryWatcher extends EventEmitter {
   };
 }
 
-module.exports = DirectoryWatcher;
+module.exports = Watcher;
