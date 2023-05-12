@@ -11,15 +11,16 @@ class Watcher extends EventEmitter {
   #timeout;
   #timer;
   #queue;
-  #options;
+  #ignore;
+  #deep;
 
-  constructor(options = {}) {
+  constructor(options) {
     super();
 
-    const { timeout } = options;
-    this.#options = options;
+    this.#deep = options?.deep;
     this.#watchers = new Map();
-    this.#timeout = timeout ?? WATCH_TIMEOUT;
+    this.#timeout = options?.timeout ?? WATCH_TIMEOUT;
+    this.#ignore = options?.ignore ?? [];
     this.#timer = null;
     this.#queue = new Map();
   }
@@ -30,11 +31,7 @@ class Watcher extends EventEmitter {
     this.#queue.set(filePath, event);
   };
 
-  #access = file => {
-    const ignore = this.#options.ignore ?? [];
-    const isIgnore = ignore.reduce((acc, pattern) => (acc |= new RegExp(pattern).test(file)), false);
-    return !isIgnore;
-  };
+  #access = file => !this.#ignore.reduce((acc, pattern) => (acc |= new RegExp(pattern).test(file)), false);
 
   #sendQueue = () => {
     if (!this.#timer) return;
@@ -46,40 +43,30 @@ class Watcher extends EventEmitter {
 
   #setWatcher = targetPath => {
     if (this.#watchers.has(targetPath)) return;
-
     const watcher = fs.watch(targetPath, (_, filename) => {
       const target = targetPath.endsWith(path.sep + filename);
       const filePath = target ? targetPath : path.join(targetPath, filename);
       if (!this.#access(filePath)) return;
-
       fs.stat(filePath, (err, stats) => {
-        if (err) {
-          this.unwatch(filePath);
-          this.#post('delete', filePath);
-          return;
-        }
-
-        if (stats.isDirectory() && this.#options.deep) this.watch(filePath);
+        if (err) return void this.unwatch(filePath), this.#post('delete', filePath);
+        if (stats.isDirectory() && this.#deep) this.watch(filePath);
         this.#post('change', filePath);
+        return void 0;
       });
     });
-
     this.#watchers.set(targetPath, watcher);
   };
 
   watch = targetPath => {
-    const watcher = this.#watchers.get(targetPath);
-    if (watcher) return;
-
+    if (this.#watchers.get(targetPath)) return;
     fs.stat(targetPath, (err, stats) => {
       if (err) return;
       this.#setWatcher(targetPath);
-
       if (!stats.isDirectory()) return;
       fs.readdir(targetPath, { withFileTypes: true }, (err, files) => {
         if (err) return;
         for (const file of files) {
-          if (!this.#access(file.name) || !file.isDirectory() || !this.#options.deep) continue;
+          if (!this.#access(file.name) || !file.isDirectory() || !this.#deep) continue;
           this.watch(path.join(targetPath, file.name));
         }
       });
@@ -89,8 +76,7 @@ class Watcher extends EventEmitter {
   unwatch = targetPath => {
     const watcher = this.#watchers.get(targetPath);
     if (!watcher) return;
-    watcher.close();
-    this.#watchers.delete(targetPath);
+    watcher.close(), this.#watchers.delete(targetPath);
   };
 }
 

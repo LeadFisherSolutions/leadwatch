@@ -1,17 +1,18 @@
-# [Node js] File system watcher
+<h1 align="center">[Node js] File system watcher</h1>
 
-- Watch specific files, directories, deeply nested directories
-- Rebuild recursive when new directories found or old directories remove
-- Deduplicate events with debounce
-
-## Usage
+<p align="center">
+ Watch specific files, directories, deeply nested directories <br/>
+ Rebuild recursive when new directories found or old directories remove <br/>
+ Deduplicate events with debounce <br/>
+</p>
+<h2 align="center">Usage</h2>
 
 ```js
 const DirectoryWatcher = require('leadwatch');
 const watcher = new DirectoryWatcher({
-  timeout: 200,
-  ignore: [new RegExp(/[\D\d]+\.ignore\D*/)],
-  deep: false,
+  timeout: 200, // Events debouncing for queue
+  ignore: [new RegExp(/[\D\d]+\.ignore\D*/)], // Ignore files and directories
+  deep: false, // Include nested directories
 });
 watcher.watch('/home/sashapop10/Downloads');
 watcher.watch('/home/sashapop10/Documents');
