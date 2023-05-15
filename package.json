@@ -12,9 +12,11 @@
   "keywords": [
     "node.js",
     "javascript",
-    "LeadFisherSolutions",
-    "fs.watch",
-    "watcher"
+    "leadfisher",
+    "fs",
+    "watcher",
+    "filesystem",
+    "zero-dependencies"
   ],
   "scripts": {
     "test": "node --test && tsc",
