@@ -3,35 +3,29 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { EventEmitter } = require('node:events');
-
 const WATCH_TIMEOUT = 10000;
 
-class Watcher extends EventEmitter {
-  #watchers;
+module.exports = class Watcher extends EventEmitter {
+  #watchers = new Map();
+  #queue = new Map();
+  #timer = null;
   #timeout;
-  #timer;
-  #queue;
   #ignore;
   #deep;
 
   constructor(options) {
     super();
-
     this.#deep = options?.deep;
-    this.#watchers = new Map();
     this.#timeout = options?.timeout ?? WATCH_TIMEOUT;
     this.#ignore = options?.ignore ?? [];
-    this.#timer = null;
-    this.#queue = new Map();
   }
 
+  #access = file => !this.#ignore.reduce((acc, pattern) => (acc |= new RegExp(pattern).test(file)), false);
   #post = (event, filePath) => {
     if (this.#timer) clearTimeout(this.#timer);
     this.#timer = setTimeout(() => this.#sendQueue(), this.#timeout);
     this.#queue.set(filePath, event);
   };
-
-  #access = file => !this.#ignore.reduce((acc, pattern) => (acc |= new RegExp(pattern).test(file)), false);
 
   #sendQueue = () => {
     if (!this.#timer) return;
@@ -79,5 +73,3 @@ class Watcher extends EventEmitter {
     watcher.close(), this.#watchers.delete(targetPath);
   };
 }
-
-module.exports = Watcher;
