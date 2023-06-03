@@ -23,8 +23,10 @@ const watcher = new DirectoryWatcher({
 });
 watcher.watch('/home/sashapop10/Downloads');
 watcher.watch('/home/sashapop10/Documents');
-watcher.on('change', fileName => console.log({ changed: fileName }));
-watcher.on('delete', fileName => console.log({ deleted: fileName }));
+watcher.on('before', path => console.log({ before: path }));
+watcher.on('change', path => console.log({ changed: path }));
+watcher.on('after', path => console.log({ after: path }));
+watcher.on('delete', path => console.log({ deleted: path }));
 ```
 
 <h2 align="center">Copyright & contributors</h2>

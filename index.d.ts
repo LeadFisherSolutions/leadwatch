@@ -7,7 +7,7 @@ type Options = {
   ignore?: RegExp[]; //* Ignore specific files (should be dir)
 };
 
-export class DirectoryWatcher extends EventEmitter {
+export default class Watcher extends EventEmitter {
   constructor(options?: Options);
   watch(path: string): void;
   unwatch(path: string): void;
