@@ -23,9 +23,9 @@ const watcher = new DirectoryWatcher({
 });
 watcher.watch('/home/sashapop10/Downloads');
 watcher.watch('/home/sashapop10/Documents');
-watcher.on('before', path => console.log({ before: path }));
+watcher.on('before', updates => console.log({ before: updates }));
 watcher.on('change', path => console.log({ changed: path }));
-watcher.on('after', path => console.log({ after: path }));
+watcher.on('after', updates => console.log({ after: updates }));
 watcher.on('delete', path => console.log({ deleted: path }));
 ```
 
